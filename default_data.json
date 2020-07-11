@@ -15,5 +15,6 @@
     "xp": 0,
     "gold": 0,
     "profession": "",
-    "inventory": []
+    "inventory": [],
+    "county": "",
 }
