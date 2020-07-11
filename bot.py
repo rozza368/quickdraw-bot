@@ -41,3 +41,4 @@ async def on_ready(self):
 
 if __name__ == "__main__":
     bot.run(TOKEN)
+
