@@ -17,7 +17,7 @@ bot = commands.Bot(
         case_insensitive=True,
         description="Holds data for Quick Draw! players.",
         self_bot=False,
-        owner_id=387909176921292801
+        owner_id=387909176921292801 or 346107577970458634
     )
 
 
@@ -33,13 +33,18 @@ async def hello(ctx):
 
 @bot.command(name="inventory", aliases=["inv"])
 async def inventory(ctx, usr=None):
+
     if usr:
-        usr = get_id_from_mention(usr)
+        usr = str(get_id_from_mention(usr))
     else:
-        usr = ctx.message.author.id
-    
-    msg = f"{bot.get_user(usr)}'s inventory:\n{user_data.get_inv(usr)}"
-    await ctx.send(msg)
+        usr = str(ctx.message.author.id)
+
+    if user_data.is_usr(usr):
+        msg = f"{bot.get_user(usr)}'s inventory:\n{user_data.get_inv(usr)}"
+        await ctx.send(msg)
+    else:
+        print('hello')
+
 
 
 @bot.command(name="logout", hidden=True)
@@ -47,6 +52,8 @@ async def logout(ctx):
     if await bot.is_owner(ctx.message.author):
         user_data.save()
         await bot.logout()
+
+
 
 
 @bot.event
@@ -62,6 +69,13 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+    if 'Fuck' in message.content:
+        await message.channel.send('Stop swearing motherfuck')
+    else:
+        print('no swearing')
+
+
+
 
 @bot.event
 async def on_ready():
@@ -69,7 +83,7 @@ async def on_ready():
     print(f"ID: {bot.user.id}\nUsername: {bot.user.name}")
     activity = discord.Activity(name='.help', type=discord.ActivityType.playing)
     await bot.change_presence(activity=activity)
-    
+
 
 
 if __name__ == "__main__":
