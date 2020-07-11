@@ -83,12 +83,7 @@ data.json
         gold (integer)
         profession (string)
         inventory (list)
-<<<<<<< HEAD
-        county(string)
-        profile as outlined in bot.py description
-=======
         profile as outlined in bot.py "create" command ^
->>>>>>> 1b7668eeb73c398e034726938e672f8e792b4b43
     
     Should use discord user ID to identify them, eg:
         "12345": {
