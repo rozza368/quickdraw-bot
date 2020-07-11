@@ -4,7 +4,7 @@ from discord.ext import commands
 from discord import Game
 
 import data
-from token import TOKEN
+from bot.TOKEN import TOKEN
 
 
 class Bot:
