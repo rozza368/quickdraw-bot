@@ -53,7 +53,7 @@ data.json
         gold (integer)
         profession (string)
         inventory (list)
-        County(string)
+        county(string)
         profile as outlined in bot.py description
     
     Should use discord user ID to identify them, eg:
