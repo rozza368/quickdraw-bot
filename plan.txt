@@ -6,4 +6,16 @@ bot.py
 
 data.py
 
-    Handles user data.
+    Handles user data by interacting with the data.json file.
+
+
+
+data.json
+
+    Stores user data. Will be created when the bot is run.
+
+
+
+default_data.json
+
+    Acts as a template for new users.
