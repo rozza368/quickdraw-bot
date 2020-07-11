@@ -2,11 +2,9 @@
 import discord
 from discord.ext import commands
 from discord import Game
-
-import os
-
 import data
-from token import 
+from bot_token import TOKEN
+
 
 
 
@@ -16,13 +14,6 @@ bot = commands.Bot(
         description = "Holds data for Quick Draw! players.",
         self_bot = False
     )
-
-
-def __init__(self):
-    # ensure data file exists
-    if not os.path.isfile("data.json"):
-        with open("data.json", "w") as data_file:
-            data_file.write("{}")
 
 
 @bot.command(name="hello")
