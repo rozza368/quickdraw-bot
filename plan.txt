@@ -7,8 +7,25 @@ bot.py
         When xp reaches (level*30), xp should be set to (xp - level*30) and level should increase by one
     
     Commands:
-        Check stats; returns all stats of mentioned profession
-            eg: .stats @rozza368
+        profile
+            Check stats; returns all stats of mentioned user. Returns message author's stats if no user specified. Syntax: user
+                eg: .profile @rozza368
+        assign (admin only)
+            Assign stats to a user. Syntax: user stat value
+            eg: .assign @rozza368 name "Joe Biden"
+        create
+            New players can use this command to create their profile if they don't have one already.
+            eg: .create
+            Required attributes
+                Name
+                Age (must be older than 20)
+                Gender
+                County
+                Physical description
+                Personality description
+            Optional
+                Special Skill
+                Profession
 
 
 
@@ -20,12 +37,14 @@ data.py
         Increase or decrease health
         Add xp
         Add or check profession
+        Save data to file
+        Read data from file
 
 
 
 data.json
 
-    Stores user data. Will be created when the bot is run.
+    Stores user data. File will be created when the bot is run.
     Required stats:
         health (integer)
         ammo (integer)
@@ -34,10 +53,22 @@ data.json
         gold (integer)
         profession (string)
         inventory (list)
-        location(string)
+        County(string)
+        profile as outlined in bot.py description
+    
+    Should use discord user ID to identify them, eg:
+        "12345": {
+            "profile": {
+                "name": "Joe Bloggs"
+            }
+            "blah": 1,
+            "inv": ["gun", "hammer"]
+        }
+
 
 
 
 default_data.json
 
     An empty data template to assign to new players.
+    All stats should be 0 or empty, except for level which should be 1.
