@@ -84,7 +84,7 @@ async def inventory(ctx, usr=None):
 
 @bot.command(name="logout", hidden=True)
 async def logout(ctx):
-    if await bot.is_owner(ctx.message.author):
+    if ctx.message.author == bot.owner_id:
         user_data.save()
         await ctx.send("Logging out")
         await bot.logout()
@@ -95,7 +95,7 @@ async def logout(ctx):
 @bot.event
 async def on_message(message):
 
-    # print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
+    print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
 
     if message.author == bot.user:
         return
@@ -104,6 +104,8 @@ async def on_message(message):
     user_data.check_usr(user)
 
     await bot.process_commands(message)
+
+
 
     if 'Fuck' in message.content:
         await message.channel.send('Stop swearing motherfuck')
@@ -117,7 +119,7 @@ async def on_message(message):
 async def on_ready():
     print("Successfully logged in")
     print(f"ID: {bot.user.id}\nUsername: {bot.user.name}")
-    activity = discord.Activity(name='.help', type=discord.ActivityType.playing)
+    activity = discord.Activity(name='for .help', type=discord.ActivityType.watching)
     await bot.change_presence(activity=activity)
 
 
