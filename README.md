@@ -1,2 +1,2 @@
-# quickdraw-bot
-A Discord bot to assist the "Quick Draw" role-playing game.
+# Quick Draw Discord Bot
+A Discord bot to assist the "Quick Draw" role-playing game. Stores player statistics and inventory information.
