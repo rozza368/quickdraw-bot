@@ -7,6 +7,9 @@ class UserData:
             with open("data.json", "w") as data_file:
                 data_file.write("{}")
         
+        with open("default_data.json", "r") as default:
+            self.default_data = json.load(default)
+
         self.load()
 
     
@@ -17,13 +20,30 @@ class UserData:
 
     def save(self):
         with open("data.json", "w") as data_file:
-            json.dump(self.data, data_file)
+            json.dump(self.data, data_file, indent=4)
     
 
     def get_inv(self, user):
-        inv = self.data[user]["inventory"]
+        inv = self.data.get(user).get("inventory")
         if inv:
             return ", ".join(inv)
         else:
             return "(empty)"
+    
 
+    def get_value(self, user, key):
+        return self.data[user].get(key)
+    
+
+    def is_usr(self, user):
+        return bool(self.data.get(user))
+
+
+    def init_usr(self, user):
+        self.data[user] = self.default_data
+        self.save()
+
+
+if __name__ == "__main__":
+    ud = UserData()
+    print(ud.is_usr("asdf"))
