@@ -1,21 +1,42 @@
 bot.py
 
     The main bot program.
+    Command prefix should be .
+    Rules:
+        Each win gives 5 xp
+        When xp reaches (level*30), xp should be set to (xp - level*30) and level should increase by one
+    
+    Commands:
+        Check stats; returns all stats of mentioned profession
+            eg: .stats @rozza368
 
 
 
 data.py
 
     Handles user data by interacting with the data.json file.
+    Should be able to:
+        Check inventory and add or remove items
+        Increase or decrease health
+        Add xp
+        Add or check profession
 
 
 
 data.json
 
     Stores user data. Will be created when the bot is run.
+    Required stats:
+        health (integer)
+        ammo (integer)
+        level (integer)
+        xp, out of level*30 (integer)
+        gold (integer)
+        profession (string)
+        inventory (list)
 
 
 
 default_data.json
 
-    Acts as a template for new users.
+    An empty data template to assign to new players.

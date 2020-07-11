@@ -2,7 +2,8 @@
     "health": 0,
     "ammo": 0,
     "level": 0,
-    "experience": 0,
+    "xp": 0,
+    "gold": 0,
     "profession": "",
     "inventory": []
 }
