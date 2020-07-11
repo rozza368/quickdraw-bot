@@ -2,6 +2,7 @@
 import discord
 from discord.ext import commands
 from discord import Game
+import asyncio
 
 import re
 import data
@@ -31,19 +32,53 @@ def get_id_from_mention(mention):
 async def hello(ctx):
     await ctx.send("Hi!")
 
+
+create_order = (
+    ("{}, enter the name.", "name"),
+    ("{}, enter the age. It must be higher than 20.", "age"),
+    ("{}, enter the gender.", "gender"),
+    ("{}, enter the county.", "county"),
+    ("{}, enter the physical description.", "physical"),
+    ("{}, enter the personality description.", "personality"),
+    ("{}, enter the special skill. This is optional, so send a dot if you don't want to fill it out.", "skill"),
+    ("{}, enter the profession. This is optional, so send a dot if you don't want to fill it out.", "profession"),
+)
+@bot.command()
+async def create(ctx):
+    author = ctx.message.author
+    if user_data.has_profile(author.id):
+        await ctx.send(f"Sorry {author.mention}, you already have a profile registered. Please contact a server administrator to change it.")
+        return
+
+    def check(user):
+        return user == author
+    
+    for question in create_order:
+        await ctx.send(question[0].format(author.mention))
+        try:
+            reply = await bot.wait_for("message", check=check, timeout=600.0)
+        except asyncio.TimeoutError:
+            await ctx.send(f"{author.mention}, you took more than 10 minutes to reply. Please use the command again.")
+            break
+        
+        if not reply == ".":
+            user_data.set_profile(author.id, question[1], reply)
+        else:
+            await ctx.send("Skipping")
+    
+    await ctx.send(f"{author.mention}, thanks for creating your character! You can now participate in the game.")
+
+
 @bot.command(name="inventory", aliases=["inv"])
 async def inventory(ctx, usr=None):
 
     if usr:
-        usr = str(get_id_from_mention(usr))
+        usr = get_id_from_mention(usr)
     else:
-        usr = str(ctx.message.author.id)
+        usr = ctx.message.author.id
 
-    if user_data.is_usr(usr):
-        msg = f"{bot.get_user(usr)}'s inventory:\n{user_data.get_inv(usr)}"
-        await ctx.send(msg)
-    else:
-        print('hello')
+    msg = f"{bot.get_user(usr).mention}{user_data.get_inv(usr)}"
+    await ctx.send(msg)
 
 
 
@@ -51,6 +86,7 @@ async def inventory(ctx, usr=None):
 async def logout(ctx):
     if await bot.is_owner(ctx.message.author):
         user_data.save()
+        await ctx.send("Logging out")
         await bot.logout()
 
 
@@ -59,13 +95,13 @@ async def logout(ctx):
 @bot.event
 async def on_message(message):
 
-    print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
-    user = message.author.id
+    # print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
+
     if message.author == bot.user:
         return
 
-    if not user_data.is_usr(user):
-        user_data.init_usr(user)
+    user = message.author.id
+    user_data.check_usr(user)
 
     await bot.process_commands(message)
 
