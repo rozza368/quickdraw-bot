@@ -6,7 +6,7 @@ from discord import Game
 import os
 
 import data
-from token import TOKEN
+from bot_token import TOKEN
 
 
 
