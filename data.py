@@ -34,11 +34,6 @@ class UserData:
                 return ":\nYou haven't registered"
 
 
-
-
-
-    
-
     def get_value(self, user, key):
         self.create_id(user)
         return self.data[user].get(key)
@@ -50,12 +45,11 @@ class UserData:
     
 
     def set_profile(self, user, key, value):
-        self.create_id(user)
         self.data[user]["profile"][key] = value
     
 
     def has_profile(self, user):
-        self.create_id(user)
+        self.is_user(user)
         # true if the name is filled out
         return self.data[user]["profile"]["name"]
     
@@ -68,7 +62,7 @@ class UserData:
         if not self.is_user(user):
             self.data[user] = self.default_data
             self.save()
-            return ', \nYou are now registered'
+            return ', \nEntering character setup:'
         else:
             return ", \nYou already have registered."
 
