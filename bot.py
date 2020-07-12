@@ -18,15 +18,19 @@ from bot_token import TOKEN
 
 user_data = data.UserData()
 
-           # Blocky            # rozza             # Derpy
+# Blocky            # rozza             # Derpy
 ownerid = [346107577970458634, 387909176921292801, 553154552908611584]
+
+
 # used to be is_admin, changed to reduce confusion
 def is_owner(authorid):
     return authorid in ownerid
 
+
 def is_admin(usr, guild):
     admin_role = discord.utils.find(lambda r: r.name == 'Server Admin', guild.roles)
     return admin_role in usr.roles
+
 
 bot = commands.Bot(
     command_prefix=".",
@@ -35,9 +39,11 @@ bot = commands.Bot(
     self_bot=False
 )
 
+
 def get_id_from_mention(mention):
     # remove all non-digit characters
     return int(re.sub(r"\D", "", mention))
+
 
 def mention_from_id(id):
     id = "<@" + str(id) + '>'
@@ -113,14 +119,20 @@ async def search_inventory(ctx, usr=None):
     await ctx.send(msg)
 
 
+@bot.command(name="register")
+async def register(ctx):
+    author = ctx.message.author
+    msg = f"{author.mention}{user_data.create_id(author.id)}"
+    await ctx.send(msg)
+
+
 # Rory now we can both do it
 @bot.command(name="logout", hidden=True)
 async def logout(ctx):
     author = ctx.message.author
-    authorid = ctx.message.author.id
     msg = f"{author.mention}, Logging out"
     msg1 = f"{author.mention}, You do not have permission to use this command."
-    if is_owner(authorid):
+    if is_owner(author.id):
         user_data.save()
         await ctx.send(msg)
         await bot.logout()
