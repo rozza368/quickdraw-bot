@@ -15,10 +15,18 @@ import asyncio
 import re
 import data
 from bot_token import TOKEN
-from admin import AdminData
 
 user_data = data.UserData()
-admin_data = AdminData()
+
+           # Blocky            # rozza             # Derpy
+ownerid = [346107577970458634, 387909176921292801, 553154552908611584]
+# used to be is_admin, changed to reduce confusion
+def is_owner(authorid):
+    return authorid in ownerid
+
+def is_admin(usr, guild):
+    admin_role = discord.utils.find(lambda r: r.name == 'Server Admin', guild.roles)
+    return admin_role in usr.roles
 
 bot = commands.Bot(
     command_prefix=".",
@@ -30,10 +38,6 @@ bot = commands.Bot(
 def get_id_from_mention(mention):
     # remove all non-digit characters
     return int(re.sub(r"\D", "", mention))
-
-def mention_from_id(id):
-    id = "<@" + id + '>'
-    return str(id)
 
 
 @bot.command(name="hello")
@@ -101,7 +105,7 @@ async def search_inventory(ctx, usr=None):
     else:
         ctx.send(f"{author.mention}, Incorrect usage ``` .search_inventory [user] ```")
 
-    msg = f"{mention_from_id(usr)}{user_data.get_inv(usr)}"
+    msg = f"{bot.get_user(usr)}{user_data.get_inv(usr)}"
     await ctx.send(msg)
 
 
@@ -112,7 +116,7 @@ async def logout(ctx):
     authorid = ctx.message.author.id
     msg = f"{author.mention}, Logging out"
     msg1 = f"{author.mention}, You do not have permission to use this command."
-    if admin_data.is_admin(authorid):
+    if is_owner(authorid):
         user_data.save()
         await ctx.send(msg)
         await bot.logout()
