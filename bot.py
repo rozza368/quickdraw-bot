@@ -1,3 +1,11 @@
+import os
+
+if not os.path.isfile("bot_token.py"):
+    with open("bot_token.py", "w") as f:
+        f.write("# Paste your bot token in between the quotes.\nTOKEN = ''")
+    print("No token file found, so one has been created. Please add your bot token to 'bot_token.py'")
+    exit()
+
 # Use discord.py 1.3.3
 import discord
 from discord.ext import commands
@@ -7,10 +15,18 @@ import asyncio
 import re
 import data
 from bot_token import TOKEN
-from admin import AdminData
 
 user_data = data.UserData()
-admin_data = AdminData()
+
+           # Blocky            # rozza             # Derpy
+ownerid = [346107577970458634, 387909176921292801, 553154552908611584]
+# used to be is_admin, changed to reduce confusion
+def is_owner(authorid):
+    return authorid in ownerid
+
+def is_admin(usr, guild):
+    admin_role = discord.utils.find(lambda r: r.name == 'Server Admin', guild.roles)
+    return admin_role in usr.roles
 
 bot = commands.Bot(
     command_prefix=".",
@@ -75,25 +91,25 @@ async def create(ctx):
 
 # I simplified this
 @bot.command(name="inventory", aliases=["inv"])
-async def inventory(ctx, usr=None):
+async def inventory(ctx):
+    admin_command = False
     author = ctx.message.author
-    if usr:
-        usr = ctx.message.author.id
+    user = str(ctx.message.author.id)
 
-
-    msg = f"{author.mention}{user_data.get_inv(usr)}"
+    msg = f"{author.mention}{user_data.get_inv(user, admin_command)}"
     await ctx.send(msg)
 
 
 @bot.command(name="search_inventory", aliases=["search_inv"], hidden=True)
 async def search_inventory(ctx, usr=None):
+    admin_command = True
     author = ctx.message.author
     if usr:
         usr = get_id_from_mention(usr)
     else:
-        ctx.send(f"{author.mention}, Incorrect usage ``` .search_inventory [user] ```")
+        await ctx.send(f"{author.mention}, Incorrect usage ``` .search_inventory [user] ```")
 
-    msg = f"{mention_from_id(usr)}{user_data.get_inv(usr)}"
+    msg = f"{mention_from_id(usr)}{user_data.get_inv(usr, admin_command)}"
     await ctx.send(msg)
 
 
@@ -104,7 +120,7 @@ async def logout(ctx):
     authorid = ctx.message.author.id
     msg = f"{author.mention}, Logging out"
     msg1 = f"{author.mention}, You do not have permission to use this command."
-    if admin_data.is_admin(authorid):
+    if is_owner(authorid):
         user_data.save()
         await ctx.send(msg)
         await bot.logout()
@@ -119,15 +135,9 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    user = message.author.id
-    user_data.check_usr(user)
+    # user = message.author.id
 
     await bot.process_commands(message)
-
-    if 'Fuck' in message.content:
-        await message.channel.send('Stop swearing motherfuck')
-    else:
-        print('no swearing')
 
 
 @bot.event

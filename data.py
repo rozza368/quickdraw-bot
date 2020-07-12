@@ -23,7 +23,7 @@ class UserData:
             json.dump(self.data, data_file, indent=4)
     
 # This part is good
-    def get_inv(self, user):
+    def get_inv(self, user, admin):
         if self.is_usr(user):
             self.check_usr(user)
             inv = self.data.get(user).get("inventory")
@@ -32,7 +32,14 @@ class UserData:
             else:
                 return "'s inventory:\n(empty)"
         else:
-            return ":\nUser hasn't registered"
+            if admin:
+                return ":\nUser hasn't registered"
+            else:
+                return ":\nYou haven't registered"
+
+
+
+
 
     
 
