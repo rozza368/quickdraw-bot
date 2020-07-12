@@ -13,10 +13,11 @@ from discord import Game
 import asyncio
 
 import re
-import data
 from bot_token import TOKEN
+import data
 
 user_data = data.UserData()
+
 
            # Blocky            # rozza             # Derpy
 ownerid = [346107577970458634, 387909176921292801, 553154552908611584]
@@ -28,6 +29,10 @@ def is_admin(usr, guild):
     admin_role = discord.utils.find(lambda r: r.name == 'Server Admin', guild.roles)
     return admin_role in usr.roles
 
+def get_id_from_mention(mention):
+    # remove all non-digit characters
+    return int(re.sub(r"\D", "", mention))
+
 bot = commands.Bot(
     command_prefix=".",
     case_insensitive=True,
@@ -35,78 +40,15 @@ bot = commands.Bot(
     self_bot=False
 )
 
-def get_id_from_mention(mention):
-    # remove all non-digit characters
-    return int(re.sub(r"\D", "", mention))
+cogs = [
+    "cogs.characters"
+]
+cogs_loaded = False
 
 
 @bot.command(name="hello")
 async def hello(ctx):
     await ctx.send("Hi!")
-
-
-# This needs to be fixed
-create_order = (
-    ("{}, enter the name.", "name"),
-    ("{}, enter the age. It must be higher than 20.", "age"),
-    ("{}, enter the gender.", "gender"),
-    ("{}, enter the county.", "county"),
-    ("{}, enter the physical description.", "physical"),
-    ("{}, enter the personality description.", "personality"),
-    ("{}, enter the special skill. This is optional, so send a dot if you don't want to fill it out.", "skill"),
-    ("{}, enter the profession. This is optional, so send a dot if you don't want to fill it out.", "profession"),
-)
-
-
-@bot.command()
-async def create(ctx):
-    author = ctx.message.author
-    if user_data.has_profile(author.id):
-        await ctx.send(
-            f"Sorry {author.mention}, you already have a profile registered. Please contact a server administrator to change it.")
-        return
-
-    def check(user):
-        return user == author
-
-    for question in create_order:
-        await ctx.send(question[0].format(author.mention))
-        try:
-            reply = await bot.wait_for("message", check=check, timeout=600.0)
-        except asyncio.TimeoutError:
-            await ctx.send(f"{author.mention}, you took more than 10 minutes to reply. Please use the command again.")
-            break
-
-        if not reply == ".":
-            user_data.set_profile(author.id, question[1], reply)
-        else:
-            await ctx.send("Skipping")
-
-    await ctx.send(f"{author.mention}, thanks for creating your character! You can now participate in the game.")
-
-
-# I simplified this
-@bot.command(name="inventory", aliases=["inv"])
-async def inventory(ctx, usr=None):
-    author = ctx.message.author
-    if usr:
-        usr = ctx.message.author.id
-
-
-    msg = f"{author.mention}{user_data.get_inv(usr)}"
-    await ctx.send(msg)
-
-
-@bot.command(name="search_inventory", aliases=["search_inv"], hidden=True)
-async def search_inventory(ctx, usr=None):
-    author = ctx.message.author
-    if usr:
-        usr = get_id_from_mention(usr)
-    else:
-        ctx.send(f"{author.mention}, Incorrect usage ``` .search_inventory [user] ```")
-
-    msg = f"{bot.get_user(usr)}{user_data.get_inv(usr)}"
-    await ctx.send(msg)
 
 
 # Rory now we can both do it
@@ -124,6 +66,18 @@ async def logout(ctx):
         await ctx.send(msg1)
 
 
+@bot.command(name="reload")
+async def reload(ctx):
+    if is_owner(ctx.message.author.id):
+        print("Reloading cogs.")
+        for cog in cogs:
+            bot.unload_extension(cog)
+            bot.load_extension(cog)
+        await ctx.send("Reloaded cogs.")
+    else:
+        await ctx.send("Insufficient permissions.")
+
+
 @bot.event
 async def on_message(message):
     print(f"{message.channel}: {message.author}: {message.author.name}: {message.content}")
@@ -138,6 +92,11 @@ async def on_message(message):
 
 @bot.event
 async def on_ready():
+    global cogs_loaded
+    if not cogs_loaded:
+        for cog in cogs:
+            bot.load_extension(cog)
+        cogs_loaded = True
     print("Successfully logged in")
     print(f"ID: {bot.user.id}\nUsername: {bot.user.name}")
     activity = discord.Activity(name='for .help', type=discord.ActivityType.watching)
