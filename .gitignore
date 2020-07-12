@@ -5,3 +5,5 @@ __pycache__/
 
 bot_token.py
 data.json
+data.py
+admin.py

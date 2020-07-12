@@ -14,15 +14,15 @@ class UserData:
 
     
     def load(self):
-        with open("data.json", "r") as data_file:
-            self.data = json.load(data_file)
+        with open("data.json", "r") as data:
+            self.data = json.load(data)
 
 
     def save(self):
         with open("data.json", "w") as data_file:
             json.dump(self.data, data_file, indent=4)
     
-
+# This part is good
     def get_inv(self, user):
         if self.is_usr(user):
             self.check_usr(user)
