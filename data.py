@@ -10,10 +10,6 @@ class UserData:
         with open("default_data.json", "r") as default:
             self.default_data = json.load(default)
 
-        self.load()
-
-    
-    def load(self):
         with open("data.json", "r") as data:
             self.data = json.load(data)
 
@@ -23,51 +19,61 @@ class UserData:
             json.dump(self.data, data_file, indent=4)
     
 # This part is good
-    def get_inv(self, user):
-        if self.is_usr(user):
-            self.check_usr(user)
+    def get_inv(self, user, admin):
+        if self.is_user(user):
+            self.create_id(user)
             inv = self.data.get(user).get("inventory")
             if inv:
                 return "'s inventory:\n, ".join(inv)
             else:
                 return "'s inventory:\n(empty)"
         else:
-            return ":\nUser hasn't registered"
+            if admin:
+                return ":\nUser hasn't registered"
+            else:
+                return ":\nYou haven't registered"
+
+
+
+
 
     
 
     def get_value(self, user, key):
-        self.check_usr(user)
+        self.create_id(user)
         return self.data[user].get(key)
     
 
     def set_value(self, user, key, value):
-        self.check_usr(user)
+        self.create_id(user)
         self.data[user][key] = value
     
 
     def set_profile(self, user, key, value):
-        self.check_usr(user)
+        self.create_id(user)
         self.data[user]["profile"][key] = value
     
 
     def has_profile(self, user):
-        self.check_usr(user)
+        self.create_id(user)
         # true if the name is filled out
         return self.data[user]["profile"]["name"]
     
 
-    def is_usr(self, user):
+    def is_user(self, user):
         return bool(self.data.get(user))
 
 
-    def check_usr(self, user):
-        if not self.is_usr(user):
+    def create_id(self, user):
+        if not self.is_user(user):
             self.data[user] = self.default_data
             self.save()
+            return ', \nYou are now registered'
+        else:
+            return ", \nYou already have registered."
 
 
 if __name__ == "__main__":
     # testing
     ud = UserData()
-    print(ud.is_usr("asdf"))
+    print(ud.is_user("asdf"))

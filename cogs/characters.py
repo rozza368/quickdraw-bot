@@ -48,26 +48,33 @@ class Characters(commands.Cog, name="Characters"):
 
 
     # I simplified this
-    @commands.command(name="inventory", aliases=["inv"])
-    async def inventory(self, ctx, usr=None):
+    @bot.command(name="inventory", aliases=["inv"])
+    async def inventory(self, ctx):
+        admin_command = False
         author = ctx.message.author
-        if usr:
-            usr = ctx.message.author.id
+        user = str(ctx.message.author.id)
 
-
-        msg = f"{author.mention}{user_data.get_inv(usr)}"
+        msg = f"{author.mention}{user_data.get_inv(user, admin_command)}"
         await ctx.send(msg)
 
 
-    @commands.command(name="search_inventory", aliases=["search_inv"], hidden=True)
+    @bot.command(name="search_inventory", aliases=["search_inv"], hidden=True)
     async def search_inventory(self, ctx, usr=None):
+        admin_command = True
         author = ctx.message.author
         if usr:
             usr = self.bot.get_id_from_mention(usr)
         else:
-            ctx.send(f"{author.mention}, Incorrect usage ``` .search_inventory [user] ```")
+            await ctx.send(f"{author.mention}, Incorrect usage ``` .search_inventory [user] ```")
 
-        msg = f"{self.bot.get_user(usr)}{user_data.get_inv(usr)}"
+        msg = f"{self.bot.mention_from_id(usr)}{user_data.get_inv(usr, admin_command)}"
+        await ctx.send(msg)
+
+
+    @bot.command(name="register")
+    async def register(self, ctx):
+        author = ctx.message.author
+        msg = f"{author.mention}{user_data.create_id(author.id)}"
         await ctx.send(msg)
 
 

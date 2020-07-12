@@ -21,9 +21,12 @@ user_data = data.UserData()
 
            # Blocky            # rozza             # Derpy
 ownerid = [346107577970458634, 387909176921292801, 553154552908611584]
+
+
 # used to be is_admin, changed to reduce confusion
 def is_owner(authorid):
     return authorid in ownerid
+
 
 def is_admin(usr, guild):
     admin_role = discord.utils.find(lambda r: r.name == 'Server Admin', guild.roles)
@@ -46,6 +49,11 @@ cogs = [
 cogs_loaded = False
 
 
+def mention_from_id(id):
+    id = "<@" + str(id) + '>'
+    return id
+
+
 @bot.command(name="hello")
 async def hello(ctx):
     await ctx.send("Hi!")
@@ -55,10 +63,9 @@ async def hello(ctx):
 @bot.command(name="logout", hidden=True)
 async def logout(ctx):
     author = ctx.message.author
-    authorid = ctx.message.author.id
     msg = f"{author.mention}, Logging out"
     msg1 = f"{author.mention}, You do not have permission to use this command."
-    if is_owner(authorid):
+    if is_owner(author.id):
         user_data.save()
         await ctx.send(msg)
         await bot.logout()
