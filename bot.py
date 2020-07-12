@@ -71,7 +71,7 @@ create_order = (
 @bot.command()
 async def create(ctx):
     author = ctx.message.author
-    if user_data.has_profile(author.id):
+    if user_data.has_profile(str(author.id)):
         await ctx.send(
             f"Sorry {author.mention}, you already have a profile registered. Please contact a server administrator to change it.")
         return
@@ -120,10 +120,27 @@ async def search_inventory(ctx, usr=None):
 
 
 @bot.command(name="register")
+
 async def register(ctx):
     author = ctx.message.author
-    msg = f"{author.mention}{user_data.create_id(author.id)}"
+    msg = f"{author.mention}{user_data.create_id(str(author.id))}"
     await ctx.send(msg)
+    # Step 1
+    def check():
+
+
+    await ctx.send(f"What is your name?")
+    try:
+        reply = await bot.wait_for("message", check=check, timeout=600.0)
+        user_data.set_profile(author.id, 'name', reply)
+        ctx.send('Maybe it worked')
+
+    except asyncio.TimeoutError:
+        ctx.send(f"{author.mention}, you took to long to respond")
+
+
+
+
 
 
 # Rory now we can both do it
