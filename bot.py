@@ -17,12 +17,11 @@ bot = commands.Bot(
         command_prefix=".",
         case_insensitive=True,
         description="Holds data for Quick Draw! players.",
-        self_bot=False,
-        owner_id=387909176921292801
+        self_bot=False
     )
 
-ownerid1 = 387909176921292801
-ownerid2 = 346107577970458634
+ownerid = [346107577970458634, 387909176921292801]
+
 
 
 def get_id_from_mention(mention):
@@ -87,10 +86,19 @@ async def inventory(ctx, usr=None):
 
 @bot.command(name="logout", hidden=True)
 async def logout(ctx):
-    if ctx.message.author.id == bot.owner_id:
+    msg = f"{bot.get_user(ctx.message.author.id).mention}, Logging out"
+    if ctx.message.author.id == ownerid[0]:
         user_data.save()
-        await ctx.send("Logging out")
+        await ctx.send(msg)
         await bot.logout()
+    elif ctx.message.author.id == ownerid[1]:
+        user_data.save()
+        await ctx.send(msg)
+        await bot.logout()
+
+    else:
+        print('Mice try lol')
+
 
 
 
