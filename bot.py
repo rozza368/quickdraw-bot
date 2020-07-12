@@ -23,6 +23,10 @@ def get_id_from_mention(mention):
     # remove all non-digit characters
     return int(re.sub(r"\D", "", mention))
 
+def mention_from_id(id):
+    id = "<@" + id + '>'
+    return str(id)
+
 
 @bot.command(name="hello")
 async def hello(ctx):
@@ -74,23 +78,22 @@ async def create(ctx):
 async def inventory(ctx, usr=None):
     author = ctx.message.author
     if usr:
-        usr = get_id_from_mention(usr)
-    else:
         usr = ctx.message.author.id
+
 
     msg = f"{author.mention}{user_data.get_inv(usr)}"
     await ctx.send(msg)
 
 
-@bot.command(name="search_inventory", aliases=["Ainv"], hidden=True)
-async def Ainventory(ctx, usr=None):
+@bot.command(name="search_inventory", aliases=["search_inv"], hidden=True)
+async def search_inventory(ctx, usr=None):
     author = ctx.message.author
     if usr:
         usr = get_id_from_mention(usr)
     else:
-        usr = ctx.message.author.id
+        ctx.send(f"{author.mention}, Incorrect usage ``` .search_inventory [user] ```")
 
-    msg = f"{author.mention}{user_data.get_inv(usr)}"
+    msg = f"{mention_from_id(usr)}{user_data.get_inv(usr)}"
     await ctx.send(msg)
 
 
