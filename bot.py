@@ -24,8 +24,8 @@ def get_id_from_mention(mention):
     return int(re.sub(r"\D", "", mention))
 
 def mention_from_id(id):
-    id = "<@" + id + '>'
-    return str(id)
+    id = "<@" + str(id) + '>'
+    return id
 
 
 @bot.command(name="hello")
