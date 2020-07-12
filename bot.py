@@ -87,6 +87,7 @@ async def inventory(ctx, usr=None):
 @bot.command(name="logout", hidden=True)
 async def logout(ctx):
     msg = f"{bot.get_user(ctx.message.author.id).mention}, Logging out"
+    msg1 = f"{bot.get_user(ctx.message.author.id).mention}, You do not have permission to logout me!"
     if ctx.message.author.id == ownerid[0]:
         user_data.save()
         await ctx.send(msg)
@@ -97,7 +98,7 @@ async def logout(ctx):
         await bot.logout()
 
     else:
-        print('Mice try lol')
+        await ctx.send(msg1)
 
 
 
