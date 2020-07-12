@@ -18,7 +18,7 @@ from bot_token import TOKEN
 
 user_data = data.UserData()
 
-# Blocky            # rozza             # Derpy
+#             Blocky                 rozza                Derpy
 ownerid = [346107577970458634, 387909176921292801, 553154552908611584]
 
 
@@ -120,13 +120,11 @@ async def search_inventory(ctx, usr=None):
 
 
 @bot.command(name="register")
-
 async def register(ctx):
     author = ctx.message.author
     msg = f"{author.mention}{user_data.create_id(str(author.id))}"
     await ctx.send(msg)
     # Step 1
-
 
 
 # Rory now we can both do it
