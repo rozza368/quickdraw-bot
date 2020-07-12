@@ -3,7 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Secret files
 bot_token.py
+
+# Unneeded files
 data.json
-data.py
-admin.py

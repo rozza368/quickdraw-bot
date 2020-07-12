@@ -1,3 +1,11 @@
+import os
+
+if not os.path.isfile("bot_token.py"):
+    with open("bot_token.py", "w") as f:
+        f.write("# Paste your bot token in between the quotes.\nTOKEN = ''")
+    print("No token file found, so one has been created. Please add your bot token to 'bot_token.py'")
+    exit()
+
 # Use discord.py 1.3.3
 import discord
 from discord.ext import commands
@@ -119,15 +127,9 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    user = message.author.id
-    user_data.check_usr(user)
+    # user = message.author.id
 
     await bot.process_commands(message)
-
-    if 'Fuck' in message.content:
-        await message.channel.send('Stop swearing motherfuck')
-    else:
-        print('no swearing')
 
 
 @bot.event
