@@ -126,20 +126,6 @@ async def register(ctx):
     msg = f"{author.mention}{user_data.create_id(str(author.id))}"
     await ctx.send(msg)
     # Step 1
-    def check():
-
-
-    await ctx.send(f"What is your name?")
-    try:
-        reply = await bot.wait_for("message", check=check, timeout=600.0)
-        user_data.set_profile(author.id, 'name', reply)
-        ctx.send('Maybe it worked')
-
-    except asyncio.TimeoutError:
-        ctx.send(f"{author.mention}, you took to long to respond")
-
-
-
 
 
 
