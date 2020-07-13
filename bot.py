@@ -14,9 +14,7 @@ import asyncio
 
 import re
 from bot_token import TOKEN
-import data
 
-user_data = data.UserData()
 
 # -------------------------------------------------------------------------------------------
 # init
@@ -56,7 +54,9 @@ bot = commands.Bot(
 # Cogs
 
 cogs = [
-    "cogs.characters"
+    "cogs.characters",
+    "cogs.register",
+    "cogs.Campaign",
 ]
 cogs_loaded = False
 

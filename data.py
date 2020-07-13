@@ -1,5 +1,6 @@
 import json
 import os
+import bot
 
 class UserData:
     def __init__(self):
@@ -21,10 +22,9 @@ class UserData:
 # This part is good
     def get_inv(self, user, admin):
         if self.is_user(user):
-            self.create_id(user)
             inv = self.data.get(user).get("inventory")
             if inv:
-                return "'s inventory:\n, ".join(inv)
+                return "'s inventory:\n".join(inv)
             else:
                 return "'s inventory:\n(empty)"
         else:
