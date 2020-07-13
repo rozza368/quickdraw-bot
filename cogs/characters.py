@@ -1,8 +1,7 @@
 import discord, asyncio
 from discord.ext import commands
 import data
-
-
+import bot
 
 user_data = data.UserData()
 
@@ -33,6 +32,25 @@ class Characters(commands.Cog, name="Characters"):
         msg = f"{self.bot.mention_from_id(usr)}{user_data.get_inv(usr, admin_command)}"
         await ctx.send(msg)
 
+        # I simplified this
+
+    @commands.command(name="mimic", hidden=True)
+    async def mimic(self, ctx):
+        if bot.is_owner:
+            while True:
+                stuff = input('Mimic:')
+                await ctx.send(stuff)
+
+    @commands.command(name="logout", hidden=True)
+    async def logout(self, ctx):
+        msg = f"{ctx.message.author.mention}, Logging out"
+        msg1 = f"{ctx.message.author.mention}, You do not have permission to logout me!"
+        if bot.is_owner(ctx.message.author.id):
+            user_data.save()
+            await ctx.send(msg)
+
+        else:
+            await ctx.send(msg1)
 
 
 def setup(bot):

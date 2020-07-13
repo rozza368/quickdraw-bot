@@ -1,5 +1,4 @@
 import os
-
 if not os.path.isfile("bot_token.py"):
     with open("bot_token.py", "w") as f:
         f.write("# Paste your bot token in between the quotes.\nTOKEN = ''")
@@ -76,6 +75,7 @@ async def reload(ctx):
 
 # ---------------------------------------------------------------------------------------------
 # Bot init
+
 
 @bot.event
 async def on_message(message):

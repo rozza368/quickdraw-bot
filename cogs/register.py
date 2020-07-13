@@ -1,6 +1,7 @@
 import discord, asyncio
 from discord.ext import commands
 import data
+import bot
 
 
 
